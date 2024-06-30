@@ -6,18 +6,29 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         .container {
+            width: 80%;
             display: flex;
             justify-content: space-between;
+            height: 90vh;
         }
         .left-panel {
             flex: 1;
-            margin-right: 20px;
+            margin-right: 19px;
+            display: flex;
+            flex-direction: column;
         }
         .right-panel {
             flex: 2;
+            display: flex;
+            flex-direction: column;
         }
         .input-group, .button-group {
             margin-bottom: 20px;
@@ -32,8 +43,8 @@
             margin-bottom: 10px;
         }
         textarea {
-            height: 400px;
-            width: 100%;
+            flex-grow: 1;
+            resize: none;
         }
         .button-group button {
             width: 100%;
@@ -58,11 +69,11 @@
         </div>
         <div class="input-group">
             <label for="chatId">Chat ID</label>
-            <input type="text" id="chatId" placeholder="Enter chat ID without @c.us">
+            <input type="text" id="chatId" placeholder="Enter phone number">
         </div>
         <div class="input-group">
             <label for="message">Message</label>
-            <input type="text" id="message" placeholder="Enter message text">
+            <input type="text" id="message" placeholder="Enter text message">
         </div>
         <div class="button-group">
             <button id="sendMessage">sendMessage</button>
@@ -81,90 +92,157 @@
     </div>
 </div>
 <script>
-        document.getElementById('getSettings').addEventListener('click', function() {
-            const idInstance = document.getElementById('idInstance').value;
-            const apiTokenInstance = document.getElementById('apiTokenInstance').value;
-            const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/getSettings/${apiTokenInstance}`;
+    function validateInputs(inputs) {
+        for (const input of inputs) {
+            if (input.value.trim() === '') {
+                return false;
+            }
+        }
+        return true;
+    }
 
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('output').value = JSON.stringify(data, null, 2);
-                })
-                .catch(error => {
-                    document.getElementById('output').value = 'Error: ' + error;
-                });
+    function displayOutput(data) {
+        document.getElementById('output').value = JSON.stringify(data, null, 2);
+    }
+
+    function displayError(error) {
+        document.getElementById('output').value = 'Error: ' + error.message || error;
+    }
+
+    function clearOutput() {
+        document.getElementById('output').value = '';
+    }
+
+    function setLoading(isLoading) {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.disabled = isLoading;
+            button.textContent = isLoading ? 'Loading...' : button.getAttribute('data-original-text');
         });
+    }
 
-        document.getElementById('getStateInstance').addEventListener('click', function() {
-            const idInstance = document.getElementById('idInstance').value;
-            const apiTokenInstance = document.getElementById('apiTokenInstance').value;
-            const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`;
+    document.querySelectorAll('button').forEach(button => {
+        button.setAttribute('data-original-text', button.textContent);
+    });
 
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('output').value = JSON.stringify(data, null, 2);
-                })
-                .catch(error => {
-                    document.getElementById('output').value = 'Error: ' + error;
-                });
-        });
+    document.getElementById('getSettings').addEventListener('click', function() {
+        const inputs = [document.getElementById('idInstance'), document.getElementById('apiTokenInstance')];
+        if (!validateInputs(inputs)) {
+            displayError('Please fill in all required fields.');
+            return;
+        }
 
-        document.getElementById('sendMessage').addEventListener('click', function() {
-            const idInstance = document.getElementById('idInstance').value;
-            const apiTokenInstance = document.getElementById('apiTokenInstance').value;
-            const chatId = document.getElementById('chatId').value + '@c.us';
-            const message = document.getElementById('message').value;
-            const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/sendMessage/${apiTokenInstance}`;
-            const messageData = {
-                chatId: chatId,
-                message: message
-            };
+        clearOutput();
+        setLoading(true);
 
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(messageData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('output').value = JSON.stringify(data, null, 2);
-                })
-                .catch(error => {
-                    document.getElementById('output').value = 'Error: ' + error;
-                });
-        });
+        const idInstance = document.getElementById('idInstance').value;
+        const apiTokenInstance = document.getElementById('apiTokenInstance').value;
+        const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/getSettings/${apiTokenInstance}`;
 
-        document.getElementById('sendFileByUrl').addEventListener('click', function() {
-            const idInstance = document.getElementById('idInstance').value;
-            const apiTokenInstance = document.getElementById('apiTokenInstance').value;
-            const chatId = document.getElementById('chatId').value + '@c.us';
-            const urlFile = document.getElementById('urlFile').value;
-            const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/sendFileByUrl/${apiTokenInstance}`;
-            const fileData = {
-                chatId: chatId,
-                urlFile: urlFile,
-                fileName: urlFile.split('/').pop()
-            };
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => displayOutput(data))
+            .catch(error => displayError(error))
+            .finally(() => setLoading(false));
+    });
 
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(fileData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('output').value = JSON.stringify(data, null, 2);
-                })
-                .catch(error => {
-                    document.getElementById('output').value = 'Error: ' + error;
-                });
-        });
-    </script>
+    document.getElementById('getStateInstance').addEventListener('click', function() {
+        const inputs = [document.getElementById('idInstance'), document.getElementById('apiTokenInstance')];
+        if (!validateInputs(inputs)) {
+            displayError('Please fill in all required fields.');
+            return;
+        }
+
+        clearOutput();
+        setLoading(true);
+
+        const idInstance = document.getElementById('idInstance').value;
+        const apiTokenInstance = document.getElementById('apiTokenInstance').value;
+        const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => displayOutput(data))
+            .catch(error => displayError(error))
+            .finally(() => setLoading(false));
+    });
+
+    document.getElementById('sendMessage').addEventListener('click', function() {
+        const inputs = [
+            document.getElementById('idInstance'),
+            document.getElementById('apiTokenInstance'),
+            document.getElementById('chatId'),
+            document.getElementById('message')
+        ];
+        if (!validateInputs(inputs)) {
+            displayError('Please fill in all required fields.');
+            return;
+        }
+
+        clearOutput();
+        setLoading(true);
+
+        const idInstance = document.getElementById('idInstance').value;
+        const apiTokenInstance = document.getElementById('apiTokenInstance').value;
+        const chatId = document.getElementById('chatId').value + '@c.us';
+        const message = document.getElementById('message').value;
+        const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/sendMessage/${apiTokenInstance}`;
+        const messageData = {
+            chatId: chatId,
+            message: message
+        };
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messageData)
+        })
+            .then(response => response.json())
+            .then(data => displayOutput(data))
+            .catch(error => displayError(error))
+            .finally(() => setLoading(false));
+    });
+
+    document.getElementById('sendFileByUrl').addEventListener('click', function() {
+        const inputs = [
+            document.getElementById('idInstance'),
+            document.getElementById('apiTokenInstance'),
+            document.getElementById('chatId'),
+            document.getElementById('urlFile')
+        ];
+        if (!validateInputs(inputs)) {
+            displayError('Please fill in all required fields.');
+            return;
+        }
+
+        clearOutput();
+        setLoading(true);
+
+        const idInstance = document.getElementById('idInstance').value;
+        const apiTokenInstance = document.getElementById('apiTokenInstance').value;
+        const chatId = document.getElementById('chatId').value + '@c.us';
+        const urlFile = document.getElementById('urlFile').value;
+        const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/sendFileByUrl/${apiTokenInstance}`;
+        const fileData = {
+            chatId: chatId,
+            urlFile: urlFile,
+            fileName: urlFile.split('/').pop()
+        };
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(fileData)
+        })
+            .then(response => response.json())
+            .then(data => displayOutput(data))
+            .catch(error => displayError(error))
+            .finally(() => setLoading(false));
+    });
+</script>
 </body>
 </html>
