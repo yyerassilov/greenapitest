@@ -55,12 +55,18 @@
             padding: 7px;
             font-size: 0.9em;
         }
-        h1 {
+        h1, .output-label {
             font-size: 100%;
+            margin: 0;
         }
 
         #message {
             height: 120px;
+        }
+
+        .output-label {
+            margin-bottom: 5px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -104,7 +110,7 @@
         </div>
     </div>
     <div class="right-panel">
-        <label for="output">Output:</label>
+        <div class="output-label">Output:</div>
         <textarea id="output" readonly></textarea>
     </div>
 </div>
