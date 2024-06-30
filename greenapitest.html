@@ -33,16 +33,17 @@
             flex-direction: column;
         }
         .input-group, .button-group {
-            margin-bottom: 20px;
+            margin-bottom: 11px; /* Reduced from the original 20px */
         }
         label {
             display: none; /* Hide labels */
             margin-bottom: 5px;
         }
         input, textarea, button {
-            width: calc(100% - 20px);
+            width: 100%; /* Ensures full width */
             padding: 10px;
             margin-bottom: 10px;
+            box-sizing: border-box; /* Ensures padding is included in the width */
         }
         textarea {
             flex-grow: 1;
