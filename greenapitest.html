@@ -31,7 +31,6 @@
             flex: 2;
             display: flex;
             flex-direction: column;
-
             height: 101.3%;
         }
         .input-group, .button-group {
@@ -57,9 +56,8 @@
             font-size: 0.9em;
         }
         h1 {
-            font-size: 100%;
+            font-size: 70%;
         }
-
 
         #message {
             height: 120px;
@@ -82,8 +80,8 @@
                 <button id="getStateInstance">getStateInstance</button>
             </div>
             <div class="input-group">
-                <label for="chatId">Phone number</label>
-                <input type="text" id="chatId" placeholder="Enter phone number">
+                <label for="phoneNumber">Phone number</label>
+                <input type="text" id="phoneNumber" placeholder="Enter phone number">
             </div>
             <div class="input-group">
                 <label for="message">Message</label>
@@ -93,8 +91,8 @@
                 <button id="sendMessage">sendMessage</button>
             </div>
             <div class="input-group">
-                <label for="chatIdFile">Phone number</label>
-                <input type="text" id="chatIdFile" placeholder="Enter phone number">
+                <label for="phoneNumberFile">Phone number</label>
+                <input type="text" id="phoneNumberFile" placeholder="Enter phone number">
             </div>
             <div class="input-group">
                 <label for="urlFile">File URL</label>
@@ -144,11 +142,11 @@
     document.getElementById('sendMessage').addEventListener('click', function() {
         const idInstance = document.getElementById('idInstance').value;
         const apiTokenInstance = document.getElementById('apiTokenInstance').value;
-        const chatId = document.getElementById('chatId').value + '@c.us';
+        const phoneNumber = document.getElementById('phoneNumber').value + '@c.us';
         const message = document.getElementById('message').value;
         const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/sendMessage/${apiTokenInstance}`;
         const messageData = {
-            chatId: chatId,
+            chatId: phoneNumber,
             message: message
         };
 
@@ -171,11 +169,11 @@
     document.getElementById('sendFileByUrl').addEventListener('click', function() {
         const idInstance = document.getElementById('idInstance').value;
         const apiTokenInstance = document.getElementById('apiTokenInstance').value;
-        const chatIdFile = document.getElementById('chatIdFile').value + '@c.us';
+        const phoneNumberFile = document.getElementById('phoneNumberFile').value + '@c.us';
         const urlFile = document.getElementById('urlFile').value;
         const apiUrl = `https://7103.api.greenapi.com/waInstance${idInstance}/sendFileByUrl/${apiTokenInstance}`;
         const fileData = {
-            chatId: chatIdFile,
+            chatId: phoneNumberFile,
             urlFile: urlFile,
             fileName: urlFile.split('/').pop()
         };
