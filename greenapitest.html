@@ -17,7 +17,7 @@
             width: 80%;
             display: flex;
             justify-content: space-between;
-            align-items: stretch; /* Aligns items to the full height of the container */
+            align-items: stretch;
             height: 90vh;
         }
         .left-panel {
@@ -33,17 +33,17 @@
             flex-direction: column;
         }
         .input-group, .button-group {
-            margin-bottom: 11px; /* Reduced from the original 20px */
+            margin-bottom: 11px;
         }
         label {
-            display: none; /* Hide labels */
+            display: none;
             margin-bottom: 5px;
         }
         input, textarea, button {
-            width: 100%; /* Ensures full width */
+            width: 100%;
             padding: 10px;
             margin-bottom: 10px;
-            box-sizing: border-box; /* Ensures padding is included in the width */
+            box-sizing: border-box;
         }
         textarea {
             flex-grow: 1;
@@ -51,6 +51,9 @@
         }
         .button-group button {
             width: 100%;
+        }
+        h1 {
+            font-size: 100%;
         }
     </style>
 </head>
@@ -60,11 +63,9 @@
     <div class="left-panel">
         <div>
             <div class="input-group">
-                <!-- Remove label and set placeholder dynamically -->
                 <input type="text" id="idInstance" placeholder="Enter idInstance">
             </div>
             <div class="input-group">
-                <!-- Remove label and set placeholder dynamically -->
                 <input type="text" id="apiTokenInstance" placeholder="Enter ApiTokenInstance">
             </div>
             <div class="button-group">
